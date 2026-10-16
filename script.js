@@ -82,7 +82,9 @@ async function Discription(place) {
     );
 
     if (!weatherurl1.ok) {
-      throw new Error("Not Connected");
+      const err = await weatherurl1.json().catch(() => null);
+      console.log(weatherurl1.status, err); // look at errors[0].message
+      throw new Error(err?.errors?.[0]?.message || "Not Connected");
     }
 
     const json = await weatherurl1.json();
