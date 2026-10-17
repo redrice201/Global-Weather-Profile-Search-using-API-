@@ -12,7 +12,7 @@ let country1 = "";
 let searchcity = "";
 let location1 = document.getElementById("location");
 
-const WORKER_URL = "https://YOUR-WORKER.YOUR-SUBDOMAIN.workers.dev";
+const WORKER_URL = "super-block-cf48.robertrosal132.workers.dev";
 
 async function weather(place) {
   try {
@@ -25,7 +25,7 @@ async function weather(place) {
     }
 
     const data = await weatherurl.json();
-    const tempdata = data.main.temp; // OpenWeather returns Kelvin by default
+    const tempdata = data.main.temp;
     const celcius = tempdata - 273.15;
     const kelvin = tempdata;
     const windspeed1 = data.wind.speed * 3.6;
