@@ -12,7 +12,7 @@ let country1 = "";
 let searchcity = "";
 let location1 = document.getElementById("location");
 
-const WORKER_URL = "super-block-cf48.robertrosal132.workers.dev";
+const WORKER_URL = "https://super-block-cf48.robertrosal132.workers.dev";
 
 async function weather(place) {
   try {
