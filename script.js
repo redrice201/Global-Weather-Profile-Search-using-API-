@@ -8,16 +8,16 @@ let weather1 = document.getElementById("weather");
 let Time = document.getElementById("Time");
 let winddetails = "";
 let City = "Manila";
-let apikey = "718d0b2ea09b0143d65bd7a2fb7d49fd";
-let key1 = "rc_live_eb9f01c19419429a94757232c46caefe";
 let country1 = "";
 let searchcity = "";
 let location1 = document.getElementById("location");
 
+const WORKER_URL = "https://YOUR-WORKER.YOUR-SUBDOMAIN.workers.dev";
+
 async function weather(place) {
   try {
     const weatherurl = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${place}&appid=${apikey}`,
+      `${WORKER_URL}/weather?q=${encodeURIComponent(place)}`,
     );
 
     if (!weatherurl.ok) {
@@ -25,11 +25,9 @@ async function weather(place) {
     }
 
     const data = await weatherurl.json();
-    const data1 = data.sys.country;
-    const tempdata = data.main.temp;
+    const tempdata = data.main.temp; // OpenWeather returns Kelvin by default
     const celcius = tempdata - 273.15;
-    const kelvincelcius = ((tempdata - 273.15) * 9) / 5 + 32;
-    const kelvin = kelvincelcius * 1.8 + 32;
+    const kelvin = tempdata;
     const windspeed1 = data.wind.speed * 3.6;
     const windspeed = windspeed1.toFixed(2);
 
@@ -41,6 +39,8 @@ async function weather(place) {
       winddetails = `${windspeed} km/h 🌫: 'Strong Breeze' Breaks twigs and moves larger branches.`;
     } else if (windspeed <= 30) {
       winddetails = `${windspeed} km/h 🌫: 'Gale' Large branches move, and walking against the wind becomes challenging.`;
+    } else {
+      winddetails = `${windspeed} km/h 🌫: 'Storm' Very strong wind, stay indoors if possible.`;
     }
     weather1.innerHTML = "";
 
@@ -48,7 +48,7 @@ async function weather(place) {
                      <h3>Forecast</h3>
                      
                      
-                     <p>Celcius: ${celcius.toFixed(1)} <span style='color:Blue'>❄</spam></p>
+                     <p>Celcius: ${celcius.toFixed(1)} <span style='color:Blue'>❄</span></p>
                      <p>Kelvin: ${kelvin.toFixed(1)}<span style='color:Red;'>🌡</span> </p>
                      <p>Weather: ${data.weather[0].description}</p>
                      <p>Wind Speed: ${winddetails}</p>
@@ -74,12 +74,7 @@ async function Discription(place) {
 
   console.log("lowercase " + place1);
   try {
-    const property = place1.length === 2 ? "codes.alpha_2" : "codes.alpha_3";
-
-    const weatherurl1 = await fetch(
-      `https://api.restcountries.com/countries/v5/${property}/${place1}`,
-      { headers: { Authorization: `Bearer ${key1}` } },
-    );
+    const weatherurl1 = await fetch(`${WORKER_URL}/country?code=${place1}`);
 
     if (!weatherurl1.ok) {
       const err = await weatherurl1.json().catch(() => null);
@@ -145,7 +140,7 @@ async function Discription(place) {
 async function clock(city) {
   try {
     const clockdata = await fetch(
-      `https://api.ipgeolocation.io/timezone?apiKey=${key1}&tz=${city}`,
+      `${WORKER_URL}/time?tz=${encodeURIComponent(city)}`,
     );
 
     if (!clockdata.ok) {
